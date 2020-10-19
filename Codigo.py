@@ -65,7 +65,7 @@ while x==True:
             if soma_jog==8 or soma_jog==9:
                 if quem[k] == 'j':
                     print('Parabens jogador {0} ganhou!!'.format(k+1)
-                    jogadores[k] = jogadores[k]
+                    novo_valor = jogadores[k] + aposta [k]
                     print('Jogador {0} possui {1} fichas'.format(k+1, jogadores[k]))
                 else:
                     print('Que pena jogador {0} perdeu :('.format(k+1))
