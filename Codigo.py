@@ -60,13 +60,29 @@ while x==True:
         cartas.remove(carta_ban2) 
         #Soma do banco
         soma_ban = carta_ban1 + carta_ban2
-        
+
+
         #INICIO DO JOGO
         for k in range(0, len(jogadores)):
+
+            #Comissão da casa 
+            if baralhos==1:
+                cdc_jog = aposta[k]*0.0129
+                cdc_ban = aposta[k]*0.0101
+                cdc_emp = aposta[k]*0.1575
+            elif baralhos==6:
+                cdc_jog = aposta[k]*0.0124
+                cdc_ban = aposta[k]*0.0106
+                cdc_emp = aposta[k]*0.1444
+            elif baralhos==8:
+                cdc_jog = aposta[k]*0.0124
+                cdc_ban = aposta[k]*0.0106
+                cdc_emp = aposta[k]*0.1436
+
             #Se soma do jogador der 8 ou 9 
             if soma_jog==8 or soma_jog==9:
                 if quem[k] == 'j':
-                    jogadores[k] = int(jogadores[k] + aposta[k])
+                    jogadores[k] = int(jogadores[k] + (aposta[k]-cdc_jog))
                     print('Parabens jogador {0} você ganhou!!Você possui {1} fichas'.format(k, jogadores[k]))
                 else:
                     jogadores[k] = int(jogadores[k] - aposta[k])
@@ -75,7 +91,7 @@ while x==True:
             #Se soma do banco der 8 ou 9
             elif soma_ban == 8 or soma_ban == 9:
                 if quem[k] == 'b':
-                    jogadores[k] = int(jogadores[k] + aposta[k])
+                    jogadores[k] = int(jogadores[k] + (aposta[k]-cdc_ban))
                     print('Parabens jogador {0} você ganhou!!Você possui {1} fichas'.format(k, jogadores[k]))
                 else:
                     jogadores[k] = int(jogadores[k] - aposta[k])
@@ -84,7 +100,7 @@ while x==True:
             #Se ocorrer um empate
             elif soma_jog == soma_ban:
                 if quem[k] == 'e':
-                    jogadores[k] = int(jogadores[k] - 8*aposta[k])
+                    jogadores[k] = int(jogadores[k] + (8*aposta[k]-cdc_emp))
                     print('Parabens jogador {0} você ganhou!!Você possui {1} fichas'.format(k, jogadores[k]))
                 else:
                     jogadores[k] = int(jogadores[k] - aposta[k])
@@ -117,7 +133,7 @@ while x==True:
                 #Se soma do jogador for maior que do banco
                 if soma_jog > soma_ban:
                     if quem[k] == 'j':
-                        jogadores[k] = int(jogadores[k] + aposta[k])
+                        jogadores[k] = int(jogadores[k] + (aposta[k]-cdc_jog))
                         print('Parabens jogador {0} você ganhou!! Você possui {1} fichas'.format(k, jogadores[k]))
                     else:
                         jogadores[k] = int(jogadores[k] - aposta[k])
@@ -126,7 +142,7 @@ while x==True:
                 #Se soma do banco for maior que do jogador  
                 elif soma_jog < soma_ban:
                     if quem[k] == 'b':
-                        jogadores[k] = int(jogadores[k] + 0.95*aposta[k])
+                        jogadores[k] = int(jogadores[k] + (0.95*aposta[k]-cdc_ban))
                         print('Parabens jogador {0} você ganhou!! Você possui {1} fichas'.format(k, jogadores[k]))
                     else:
                         jogadores[k] = int(jogadores[k] - aposta[k])
@@ -135,7 +151,7 @@ while x==True:
                 #Se ocorreu um empate  
                 elif soma_jog == soma_ban:
                     if quem[k] == 'e':
-                        jogadores[k] = int(jogadores[k] + 8*aposta[k])
+                        jogadores[k] = int(jogadores[k] + (8*aposta[k]-cdc_emp))
                         print('Parabens jogador {0} você ganhou!! Você possui {1} fichas'.format(k, jogadores[k]))
                     else:
                         jogadores[k] = int(jogadores[k] - aposta[k])
