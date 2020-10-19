@@ -5,63 +5,139 @@
 #importa a função aleatório
 import random
 
-#cartas do baralho
-cartas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0]*4
-#dinheiro do jogador
-jogador = 100
-
-
-carta_jog1 = random(cartas)
-carta_jog2 = random(0, len(cartas)-carta_jog1)
-soma_jog = carta_jog1 + carta_jog2
-carta_ban1 = random.randint(0, len(cartas)-carta_jog1-carta_jog2)
-carta_ban2 = random.randint(0, len(cartas)-carta_jog1-carta_jog2-carta_ban1)
-soma_ban = carta_ban1 + carta_ban2
-
-carta_ex = random.randint(0, len(cartas)-carta_jog1-carta_jog2-carta_ban1-carta_ban2)
-carta_ex2 = random.randint(0, len(cartas)-carta_jog1-carta_jog2-carta_ban1-carta_ban2-carta_ex)
-
-
-
-if (soma_jog!= 8 and 9) and (soma_ban != 8 and 9):
-    if soma_jog <= 5:
-        soma_jog += carta_ex
-    elif soma_ban <= 5:
-        soma_ban += carta_ex2
+#número de jogadores
+n_jogadores = int(input('Quantos jogadores há? '))
 
 x = True
-while jogador>0 and x==True: 
-    #pontos de inicio do jogador
-    jogador = 100
-
+while x==True: 
+    #dinheiro dos jogadores
+    jogadores = [100]*n_jogadores
+    #Verifica que todos os jogadores estão acima de 0 fichas
+    for i in range(0,len(jogadores)):
+        if jogadores[i]==0:
+            print('O jogador {0} não possui mais fichas'.format(jogadores[i]))
+            del jogadores[i]
+    
     perg = input('Deseja apostar?(s)(n) ')
+    
     if perg == 's':
-        aposta = int(input('Quanto deseja apostar? '))
-        while aposta > jogador or aposta < 0:
-            print('Valor acima do que possui, tente novamente')
-            aposta = int(input('Quanto deseja apostar? '))
-        quem = input('Em quem deseja apostar? banco(b),jogador(j) ou empate(e) ')
 
+        baralhos = int(input('Quantos baralhos serão utilizados entre 1, 6 ou 8? '))
+        #cartas do baralho
+        cartas = ([1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0]*4)*baralhos
+
+        aposta = [0]*n_jogadores
+        quem = [0]*n_jogadores
+        for n in range(0, n_jogadores):
+            print('Jogador {0} possui {1} fichas'.format(n+1 ,jogadores[n]))
+            #Cria uma lista comas diferentes apostas
+            aposta[n] = int(input('Quanto deseja apostar? '))
+            
+            #Verifica que o valor da aposta esteja condizente
+            while aposta[n] > jogadores[n] or aposta[n] < 0:
+                print('Valor não acessivel, tente novamente')
+                aposta[n] = int(input('Quanto deseja apostar? '))
+            
+            #Cria uma lista com as diferentes escolhas de quem apostar
+            quem[n] = input('Em quem deseja apostar? banco(b),jogador(j) ou empate(e) ')
+
+        print(aposta)
+        print(quem)
+        #Cartas do jogador
+        carta_jog1 = random.choice(cartas)
+        cartas.remove(carta_jog1) 
+        carta_jog2 = random.choice(cartas)
+        cartas.remove(carta_jog2)
+        #Soma jogador
+        soma_jog = carta_jog1 + carta_jog2
+        #Cartas do banco
+        carta_ban1 = random.choice(cartas)
+        cartas.remove(carta_ban1) 
+        carta_ban2 = random.choice(cartas)
+        cartas.remove(carta_ban2) 
+        #Soma banco
+        soma_ban = carta_ban1 + carta_ban2
+        
+        print(carta_jog1, carta_jog2, carta_ban1, carta_ban2)
+        print(soma_jog, soma_ban)
+        
         #Se soma do jogador der 8 ou 9 
-        if soma_jog==8 or soma_jog==9:
-            if quem == 'j':
-                jogador += aposta
-            else:
-                jogador -= 0.05 * aposta
+        for k in range(0, n_jogadores):
+            if soma_jog==8 or soma_jog==9:
+                if quem[k] == 'j':
+                    jogadores[k] = int(jogadores[k] + aposta[k])
+                    print('Parabens jogador {0}, você ganhou!!Você possui {1} fichas'.format(k+1, jogadores[k]))
+                else:
+                    jogadores[k] = int(jogadores[k] - aposta[k])
+                    print('Que pena jogador {0}, você perdeu...você possui {1} fichas'.format(k+1, jogadores[k]))
 
-        #Se soma do banco der 8 ou 9
-        elif soma_ban == 8 or soma_ban == 9:
-            if quem == 'b':
-                jogador += aposta
-            else:
-                jogador -= 0.05 * aposta
+            #Se soma do banco der 8 ou 9
+            elif soma_ban == 8 or soma_ban == 9:
+                if quem[k] == 'b':
+                    jogadores[k] = int(jogadores[k] + aposta[k])
+                    print('Parabens jogador {0}, você ganhou!!Você possui {1} fichas'.format(k+1, jogadores[k]))
+                else:
+                    jogadores[k] = int(jogadores[k] - aposta[k])
+                    print('Que pena jogador {0}, você perdeu...você possui {1} fichas'.format(k+1, jogadores[k]))
 
-        #Se ocorrer um empate
-        elif soma_jog == soma_ban:
-            if quem == 'e':
-                jogador += 8*aposta
-            else:
-                jogador -= 0.05 * aposta
+            #Se ocorrer um empate
+            elif soma_jog == soma_ban:
+                if quem[k] == 'e':
+                    jogadores[k] = int(jogadores[k] - 8*aposta[k])
+                    print('Parabens jogador {0}, você ganhou!!Você possui {1} fichas'.format(k+1, jogadores[k]))
+                else:
+                    jogadores[k] = int(jogadores[k] - aposta[k])
+                    print('Que pena jogador {0}, você perdeu...você possui {1} fichas'.format(k+1, jogadores[k]))
 
+        #Se ambos forem diferente de 8 ou 9
+        if soma_jog!= 8 and soma_jog!= 9 and soma_ban != 8 and soma_ban != 9 and soma_ban!=18 and soma_jog!=18:
+            
+            #Se soma de um for menor ou igual a 5
+            if soma_jog <= 5:
+                #Carta extras
+                carta_ex = random.choice(cartas)
+                cartas.remove(carta_ex) 
+                soma_jog += carta_ex
+            elif soma_ban <= 5:
+                #Cartas extra 2
+                carta_ex2 = random.choice(cartas)
+                soma_ban += carta_ex2
+            
+            #Se soma de um for maior ou igual a 10
+            
+            elif soma_jog>=10:
+                soma_jog = str(soma_jog)
+                soma_jog = int(soma_jog[1])
+            elif soma_ban>=10:
+                soma_ban = str(soma_ban)
+                soma_ban = int(soma_ban[1])
+
+            for m in range(0, n_jogadores):
+                #Verifica quem é o maior, resultando na vitória deste, ou, empate
+                if soma_jog > soma_ban:
+                    if quem[m] == 'j':
+                        jogadores[m] = int(jogadores[m] + aposta[m])
+                        print('Parabens jogador {0}, você ganhou!! Você possui {1} fichas'.format(m+1, jogadores[m]))
+                    else:
+                        jogadores[m] = int(jogadores[m] - aposta[m])
+                        print('Que pena jogador {0}, você perdeu...você possui {1} fichas'.format(m+1, jogadores[m]))
+                        
+                
+                elif soma_ban > soma_jog:
+                    if quem[m] == 'b':
+                        jogadores[m] = int(jogadores[m] + 0.95*aposta[m])
+                        print('Parabens jogador {0}, você ganhou!! Você possui {1} fichas'.format(m+1, jogadores[m]))
+                    else:
+                        jogadores[m] = int(jogadores[m] - aposta[m])
+                        print('Que pena jogador {0}, você perdeu...você possui {1} fichas'.format(m+1, jogadores[m]))
+                
+                elif soma_jog == soma_ban:
+                    if quem[m] == 'e':
+                        jogadores[m] = int(jogadores[m] + 8*aposta[m])
+                        print('Parabens jogador {0}, você ganhou!! Você possui {1} fichas'.format(m+1, jogadores[m]))
+                    else:
+                        jogadores[m] = int(jogadores[m] - aposta[m])
+                        print('Que pena jogador {0}, você perdeu...você possui {1} fichas'.format(m+1, jogadores[m]))
     else:
+        print('Volte sempre!')
         x=False
